@@ -157,7 +157,7 @@ const BUS_MODEL_STYLES = {
   'benz-modern':{ label: 'BENZ', accent: '#d6dce7' },
   scania:       { label: 'SCANIA', accent: '#cf1f25' },
   volvo:        { label: 'VOLVO', accent: '#7fd1ff' },
-  dorsa:        { label: 'DORSA', accent: '#ffe7f2' },
+  yutang:       { label: 'YUTANG', accent: '#ffe7f2' },
   'benz-classic': { label: 'BENZ', accent: '#e1e5ec' },
 };
 
@@ -1456,7 +1456,7 @@ function drawBusModelBodyDetails(modelName, bx, by, bw, bh, theme, model) {
       ctx.fillStyle = 'rgba(255,255,255,0.16)';
       rr(bx + 7, by + 21, bw - 24, 3, 2, ctx.fillStyle);
       break;
-    case 'dorsa':
+    case 'yutang':
       ctx.strokeStyle = '#fff3fb';
       ctx.lineWidth = 1.8;
       ctx.beginPath();

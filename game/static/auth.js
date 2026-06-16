@@ -6,6 +6,13 @@
   const rotateScreen = document.getElementById("rotateScreen");
   const countdownScreen = document.getElementById("countdownScreen");
   const countdownNumber = document.getElementById("countdownNumber");
+  const countdownMessage = document.getElementById("countdownMessage");
+
+  const COUNTDOWN_MESSAGES = {
+    3: "جدید ترین ناوگان اتوبوسی کشور",
+    2: "خرید با تخفیف همیشگی",
+    1: 'تنها با خرید از <span class="countdown-brand">arobus.ir</span>',
+  };
   const startScreen = document.getElementById("startScreen");
   const phoneInput = document.getElementById("phoneInput");
   const loginBtn = document.getElementById("loginBtn");
@@ -149,13 +156,24 @@
     }
   }
 
+  function setCountdownStep(n) {
+    if (countdownNumber) countdownNumber.textContent = faNum(n);
+    if (!countdownMessage) return;
+    const msg = COUNTDOWN_MESSAGES[n];
+    if (n === 1) {
+      countdownMessage.innerHTML = msg;
+    } else {
+      countdownMessage.textContent = msg || "";
+    }
+  }
+
   async function startCountdown() {
     const token = ++countdownToken;
     setPhase("countdown");
 
     for (const n of [3, 2, 1]) {
       if (token !== countdownToken) return;
-      if (countdownNumber) countdownNumber.textContent = faNum(n);
+      setCountdownStep(n);
       await sleep(1000);
     }
 
@@ -214,6 +232,9 @@
       });
   };
 
-  setPhase("login");
-  restoreSession();
+  (async function init() {
+    if (window.splashReady) await window.splashReady;
+    setPhase("login");
+    restoreSession();
+  })();
 })();
