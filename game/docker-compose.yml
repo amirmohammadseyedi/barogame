@@ -1,0 +1,24 @@
+services:
+  arobazi:
+    image: python:3.12-slim
+    container_name: arobazi-game
+    working_dir: /app
+    # بدون build — کل پروژه mount می‌شه
+    command: >
+      sh -c "pip install -q -r requirements.txt &&
+             python migrate.py &&
+             python app.py"
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_DEBUG: "1"
+      PORT: "5000"
+      DATABASE_PATH: "/app/data/arobazi.db"
+      SESSION_DAYS: "30"
+    volumes:
+      - .:/app
+      - pip_cache:/root/.cache/pip
+    restart: unless-stopped
+
+volumes:
+  pip_cache:
