@@ -228,5 +228,18 @@ LOGGING = {
             'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
+        'arocr.settings': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }
+
+import logging
+
+logging.getLogger('arocr.settings').info(
+    'BACKEND_BASE_DOMAIN=%s ALLOWED_HOSTS=%s',
+    BACKEND_BASE_DOMAIN,
+    ALLOWED_HOSTS,
+)
