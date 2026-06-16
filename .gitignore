@@ -40,6 +40,4 @@ front-aro/dist/
 Thumbs.db
 
 # Data / exports
-*.json.bak
-exporteddata.json
 test.json
