@@ -12,18 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
-from urllib.parse import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-def _split_env_list(name, default=''):
-    return [item.strip() for item in os.environ.get(name, default).split(',') if item.strip()]
-
-
-def _unique_list(items):
-    return list(dict.fromkeys(items))
 
 
 # Quick-start development settings - unsuitable for production
@@ -38,33 +29,37 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-BACKEND_BASE_DOMAIN = os.environ.get(
-    'BACKEND_BASE_DOMAIN',
+BACKEND_BASE_DOMAIN = 'https://arobus.net'
+
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'web',
+    'nginx',
+    'arobus.net',
+    '194.5.192.244',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://arobus.net',
+    'http://arobus.net',
     'http://localhost:8000',
-).rstrip('/')
+    'http://127.0.0.1:8000',
+    'http://localhost:8081',
+    'http://127.0.0.1:8081',
+    'http://194.5.192.244:8000',
+    'http://194.5.192.244:8081',
+    'http://localhost:13082',
+    'http://127.0.0.1:13082',
+]
 
-_backend_host = urlparse(BACKEND_BASE_DOMAIN).netloc
-
-ALLOWED_HOSTS = _unique_list(
-    _split_env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1,web,nginx')
-    + ([_backend_host] if _backend_host else [])
-)
-
-CSRF_TRUSTED_ORIGINS = _unique_list(
-    _split_env_list(
-        'CSRF_TRUSTED_ORIGINS',
-        'http://localhost:8000,http://127.0.0.1:8000,http://localhost:13082',
-    )
-    + [BACKEND_BASE_DOMAIN]
-)
-
-CORS_ALLOWED_ORIGINS = _unique_list(
-    _split_env_list(
-        'CORS_ALLOWED_ORIGINS',
-        'http://localhost:13082,http://127.0.0.1:13082',
-    )
-    + [BACKEND_BASE_DOMAIN]
-)
+CORS_ALLOWED_ORIGINS = [
+    'https://arobus.net',
+    'http://arobus.net',
+    'http://localhost:13082',
+    'http://127.0.0.1:13082',
+    'http://194.5.192.244:8081',
+]
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
