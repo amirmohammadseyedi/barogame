@@ -1,6 +1,6 @@
 from django.contrib import admin, messages
 
-from .models import CrawlDataTravel, Travel
+from .models import ChartAxisType, ChartParameter, CrawlDataTravel, Travel, Carts, Taavoni
 from .services import crawl_week_for_travel, fetch_route_data
 
 
@@ -84,3 +84,32 @@ class CrawlDataTravelAdmin(admin.ModelAdmin):
     search_fields = ('travel__origin_code', 'travel__destination_code', 'date')
     readonly_fields = ('created_at',)
     actions = [fetch_route_from_safar724]
+
+@admin.register(Taavoni)
+class TaavoniAdmin(admin.ModelAdmin):
+    list_display = ('persian_name', 'companyNameId')
+    search_fields = ('persian_name', 'companyNameId')
+    list_filter = ('created_at',)
+    readonly_fields = ('created_at',)
+
+@admin.register(ChartAxisType)
+class ChartAxisTypeAdmin(admin.ModelAdmin):
+    list_display = ('code', 'label')
+    search_fields = ('code', 'label')
+
+@admin.register(Carts)
+class CartsAdmin(admin.ModelAdmin):
+    list_display = ('cart_id', 'companyPersianName', 'capacity' , 'created_at')
+    search_fields = ('cart_id', 'companyPersianName')
+    list_filter = ('created_at',)
+    readonly_fields = ('created_at',)
+
+@admin.register(ChartParameter)
+class ChartParameterAdmin(admin.ModelAdmin):
+    list_display = ('english_name', 'persian_name', 'axis_types_display')
+    search_fields = ('english_name', 'persian_name')
+    filter_horizontal = ('axis_types',)
+
+    @admin.display(description='Axis types')
+    def axis_types_display(self, obj):
+        return ', '.join(obj.axis_types.values_list('code', flat=True)) or '-'

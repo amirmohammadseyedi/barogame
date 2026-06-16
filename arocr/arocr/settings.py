@@ -12,9 +12,18 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def _split_env_list(name, default=''):
+    return [item.strip() for item in os.environ.get(name, default).split(',') if item.strip()]
+
+
+def _unique_list(items):
+    return list(dict.fromkeys(items))
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,20 +38,33 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get(
-    'ALLOWED_HOSTS',
-    'localhost,127.0.0.1,web,nginx',
-).split(',')
+BACKEND_BASE_DOMAIN = os.environ.get(
+    'BACKEND_BASE_DOMAIN',
+    'http://localhost:8000',
+).rstrip('/')
 
-CSRF_TRUSTED_ORIGINS = os.environ.get(
-    'CSRF_TRUSTED_ORIGINS',
-    'http://localhost:8000,http://127.0.0.1:8000,http://localhost:13082',
-).split(',')
+_backend_host = urlparse(BACKEND_BASE_DOMAIN).netloc
 
-CORS_ALLOWED_ORIGINS = os.environ.get(
-    'CORS_ALLOWED_ORIGINS',
-    'http://localhost:13082,http://127.0.0.1:13082',
-).split(',')
+ALLOWED_HOSTS = _unique_list(
+    _split_env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1,web,nginx')
+    + ([_backend_host] if _backend_host else [])
+)
+
+CSRF_TRUSTED_ORIGINS = _unique_list(
+    _split_env_list(
+        'CSRF_TRUSTED_ORIGINS',
+        'http://localhost:8000,http://127.0.0.1:8000,http://localhost:13082',
+    )
+    + [BACKEND_BASE_DOMAIN]
+)
+
+CORS_ALLOWED_ORIGINS = _unique_list(
+    _split_env_list(
+        'CORS_ALLOWED_ORIGINS',
+        'http://localhost:13082,http://127.0.0.1:13082',
+    )
+    + [BACKEND_BASE_DOMAIN]
+)
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
@@ -66,6 +88,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'safar724',
+    'saledata',
+    'aroshort',
 ]
 
 MIDDLEWARE = [
@@ -140,11 +164,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -157,3 +181,52 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Celery / Redis
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://redis:6379/1')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BEAT_SCHEDULE = {
+    'crawl-today-every-30-minutes': {
+        'task': 'safar724.tasks.crawl_today_all_travels',
+        'schedule': 5*60, # 5 minutes
+    },
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+    },
+    'loggers': {
+        'django.server': {
+            'handlers': ['console'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'safar724': {
+            'handlers': ['console'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
