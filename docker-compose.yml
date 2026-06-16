@@ -56,8 +56,8 @@ services:
         condition: service_healthy
     networks:
       - arocr_net
-    expose:
-      - "8000"
+    ports:
+      - "${WEB_EXPOSE_PORT:-8081}:8000"
 
   nginx:
     image: nginx:1.27-alpine
