@@ -851,17 +851,46 @@
       position: fixed;
       inset: 0;
       z-index: 9999;
-      background: #0d1117;
+      background: radial-gradient(ellipse at 50% 30%, #1e2a4a 0%, #0d1117 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding:
+        max(0px, env(safe-area-inset-top))
+        max(0px, env(safe-area-inset-right))
+        max(0px, env(safe-area-inset-bottom))
+        max(0px, env(safe-area-inset-left));
+    }
+    .splash-screen.hidden { display: none !important; }
+    .splash-cover-wrap {
+      position: absolute;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .splash-screen.hidden { display: none !important; }
     .splash-cover {
+      display: block;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      max-width: 100%;
+      max-height: 100dvh;
+      object-fit: contain;
       object-position: center;
+    }
+    @media (orientation: landscape) and (max-height: 520px) {
+      .splash-cover { object-fit: cover; }
+    }
+    @media (min-width: 768px) {
+      .splash-cover {
+        width: min(100vw, 980px);
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+    @media (min-width: 1200px) {
+      .splash-cover { width: min(100vw, 1140px); }
     }
     .splash-overlay {
       position: absolute;
@@ -905,7 +934,9 @@
 <body>
 
 <div id="splashScreen" class="splash-screen" aria-label="در حال بارگذاری">
-  <img class="splash-cover" src="/static/images/cover.webp" alt="آروبازی"/>
+  <div class="splash-cover-wrap">
+    <img class="splash-cover" src="/static/images/arobaz_last_image_under_1mb.webp" alt="آروبازی"/>
+  </div>
   <div class="splash-overlay">
     <div class="splash-loader-track"><div class="splash-loader-bar" id="splashBar"></div></div>
     <p class="splash-text">در حال بارگذاری...</p>

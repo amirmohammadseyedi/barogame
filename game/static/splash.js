@@ -4,7 +4,7 @@
   const splashBar = document.getElementById("splashBar");
 
   const preloadUrls = [
-    "/static/images/cover.webp",
+    "/static/images/arobaz_last_image_under_1mb.webp",
     "/static/images/buses/man.webp",
     "/static/images/buses/benz-modern.webp",
     "/static/images/buses/scania.webp",
