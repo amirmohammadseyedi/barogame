@@ -4,12 +4,11 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-title" content="آروبازی"/>
+  <meta name="apple-mobile-web-app-title" content="آروباز"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="format-detection" content="telephone=no"/>
 
-  <title>آروبازی | نسخه آیفون</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -237,8 +236,14 @@
     }
     .leaderboard-row:last-child { border-bottom: none; }
     .leaderboard-rank { color: #8890aa; text-align: center; }
-    .leaderboard-phone { color: #eef2ff; letter-spacing: 1px; }
-    .leaderboard-score { color: #FFD200; font-weight: 800; }
+    .leaderboard-phone {
+      color: #eef2ff;
+      letter-spacing: 1px;
+      text-align: center;
+      justify-self: center;
+      width: 100%;
+    }
+    .leaderboard-score { color: #FFD200; font-weight: 800; text-align: end; }
     .leaderboard-empty {
       font-size: 0.76rem;
       color: #667;
@@ -935,7 +940,7 @@
 
 <div id="splashScreen" class="splash-screen" aria-label="در حال بارگذاری">
   <div class="splash-cover-wrap">
-    <img class="splash-cover" src="/static/images/arobaz_last_image_under_1mb.webp" alt="آروبازی"/>
+    <img class="splash-cover" src="/static/images/arobaz_last_image_under_1mb.webp" alt="آروباز"/>
   </div>
   <div class="splash-overlay">
     <div class="splash-loader-track"><div class="splash-loader-bar" id="splashBar"></div></div>
@@ -949,7 +954,7 @@
     <h2>تنظیمات</h2>
     <label class="settings-row">
       <span>پخش موسیقی بازی</span>
-      <input type="checkbox" id="musicToggle" checked/>
+      <input type="checkbox" id="musicToggle"/>
     </label>
     <button type="button" class="btn settings-close" id="settingsCloseBtn">بستن</button>
   </div>
@@ -981,7 +986,7 @@
   </div>
   <div id="startScreen" class="overlay hidden">
     <div class="bus-icon">🚌</div>
-    <h1>آروبازی</h1>
+    <h1>آروباز</h1>
     <p class="subtitle">اتوبوس خودت را مرحله‌به‌مرحله بساز، بعد وارد جاده شو.</p>
     <div class="wizard-header">
       <div class="step-indicator" id="stepIndicator">
@@ -1081,7 +1086,6 @@
         <button type="button" class="btn hidden" id="startBtn">شروع بازی</button>
       </div>
     </div>
-    <p class="hint">در آیفون: لمس صفحه برای پرش</p>
   </div>
   <div id="countdownScreen" class="overlay hidden">
     <div class="countdown-number" id="countdownNumber">۳</div>

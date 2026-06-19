@@ -9,7 +9,7 @@
   if (!settingsBtn || !settingsPanel || !musicToggle) return;
 
   function isMusicEnabled() {
-    return localStorage.getItem(MUSIC_KEY) !== "off";
+    return localStorage.getItem(MUSIC_KEY) === "on";
   }
 
   function setMusicEnabled(enabled) {
